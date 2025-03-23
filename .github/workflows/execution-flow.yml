@@ -37,6 +37,8 @@ jobs:
         run: npm run test
       - name: Upload test report
         if: failure() && steps.run-tests.outcome == 'failure'
+        # failure() is one of four special conditions
+        # outcome == 'failure' will chech the outcom of step with id run-tests whether it is failed.
         uses: actions/upload-artifact@v4
         with:
           name: test-report
@@ -75,3 +77,11 @@ jobs:
         run: ls
       - name: Deploy
         run: echo "Deploying..."
+  report:
+    needs: [test,lint]
+    runs-on: ubuntu-latest
+    steps:
+      - name: output-info
+        run: |
+          echo "Job failed"
+          echo "${{ toJSON(github) }}"
